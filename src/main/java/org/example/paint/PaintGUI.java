@@ -45,6 +45,20 @@ public class PaintGUI extends JFrame {
         canvasPanel.add(chooseAColorBtn);
         springLayout.putConstraint(SpringLayout.NORTH, chooseAColorBtn, 8 , SpringLayout.NORTH, canvasPanel);
         springLayout.putConstraint(SpringLayout.WEST, chooseAColorBtn, 45 , SpringLayout.WEST, canvasPanel);
+
+        JButton resetBtn = new JButton("Reset");
+        resetBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        resetBtn.setPreferredSize(new Dimension(70,35));
+        resetBtn.addActionListener(e ->{
+            canvas.resetCanvas();
+        });
+
+        canvasPanel.add(resetBtn);
+        springLayout.putConstraint(SpringLayout.NORTH, resetBtn, 8 , SpringLayout.NORTH, canvasPanel);
+        springLayout.putConstraint(SpringLayout.WEST, resetBtn, 90 , SpringLayout.WEST, canvasPanel);
+
+
+
         this.getContentPane().add(canvasPanel);
 
     }

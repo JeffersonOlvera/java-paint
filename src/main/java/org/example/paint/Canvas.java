@@ -11,9 +11,11 @@ public class Canvas extends JPanel {
 
     private final static int STROKE_SIZE = 5;
 
+    private List<List<ColorPoint>> allPaths;
     private List<ColorPoint> currentPath;
 
     private Color color;
+    private  int canvasWidth, canvasHeight;
     private  int x, y;
 
     public Canvas(int targetWidth, int targetHeight){
@@ -22,6 +24,11 @@ public class Canvas extends JPanel {
         setOpaque(true);
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        
+        // init vars
+        allPaths = new ArrayList<>(25);
+        canvasWidth = targetWidth;
+        canvasHeight = targetHeight;
 
         MouseAdapter mouseAdapter = new MouseAdapter() {
 
@@ -42,6 +49,8 @@ public class Canvas extends JPanel {
 
             @Override
             public void mouseReleased(MouseEvent e) {
+                allPaths.add(currentPath);
+
                 currentPath = null;
             }
 
@@ -72,5 +81,39 @@ public class Canvas extends JPanel {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public void resetCanvas() {
+        Graphics g = getGraphics();
+        g.clearRect(0,0, canvasWidth, canvasHeight);
+        g.dispose();
+
+        allPaths = new ArrayList<>(25);
+        currentPath=null;
+
+        repaint();
+        revalidate();
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g;
+
+        for(List<ColorPoint> path : allPaths){
+            ColorPoint from = null;
+            for (ColorPoint point : path){
+                g2d.setColor(point.getColor());
+
+                if(path.size() == 1){
+                    g2d.fillRect(point.getX(), point.getY(), STROKE_SIZE, STROKE_SIZE);
+                }
+                if(from != null){
+                    g2d.setStroke(new BasicStroke(STROKE_SIZE));
+                    g2d.drawLine(from.getX(), from.getY(), point.getX(), point.getY());
+                }
+                from = point;
+            }
+        }
     }
 }
